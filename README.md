@@ -1,11 +1,11 @@
 # ZIPFA
 Zero inflated poison factor analysis
 
-'EMzeropoisson_mat.m': Zero inflated Poisson regression.
-'ZIPFA.m': Zero inflated Poisson factor analysis. 
-'cv_ZIPFA.m': Cross validation on ZIPFA.
-'Examples codes.m': Example runs for 'EMzeropoisson_mat.m', 'ZIPFA.m', 'cv_ZIPFA.m'.
-'Table and Figure in paper.m': All tables and figures in the paper. 
+'EMzeropoisson_mat.m': Zero inflated Poisson regression.\
+'ZIPFA.m': Zero inflated Poisson factor analysis. \
+'cv_ZIPFA.m': Cross validation on ZIPFA.\
+'Examples codes.m': Example runs for 'EMzeropoisson_mat.m', 'ZIPFA.m', 'cv_ZIPFA.m'.\
+'Table and Figure in paper.m': All tables and figures in the paper. \
 
 
 In the 'Codes for paper' fold:
