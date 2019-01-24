@@ -5,7 +5,7 @@ Zero inflated poison factor analysis
 'ZIPFA.m': Zero inflated Poisson factor analysis. \
 'cv_ZIPFA.m': Cross validation on ZIPFA.\
 'Examples codes.m': Example runs for 'EMzeropoisson_mat.m', 'ZIPFA.m', 'cv_ZIPFA.m'.\
-'Table and Figure in paper.m': All tables and figures in the paper. \
+'Table and Figure in paper.m': All tables and figures in the paper. 
 
 
 In the 'Codes for paper' fold:\
@@ -22,7 +22,7 @@ In the 'Codes for paper' fold:\
 'originsdataMar2017.csv': Original ORIGINS data.\
 'taxa.csv': Taxa name list.\
 'our_result.xlsx': Data for figure 5.\
-'cluster_fit.m'/'heatmap.m'/'pnew.m': Accessory codes. \
+'cluster_fit.m'/'heatmap.m'/'pnew.m': Accessory codes. 
 
 'final_sim' folder: Simulated data for figure 3.\
 'simu' folder: Simulated data for table 1.
