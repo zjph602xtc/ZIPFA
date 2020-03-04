@@ -4,7 +4,7 @@
 
 **The method has a Matlab version and R version. The Matlab version codes are in this repository. The R version is on CRAN [(click)](https://cran.rstudio.com/web/packages/ZIPFA/index.html)**
 
-**Here is the tutorial for both versions. [(click)](https://cran.rstudio.com/web/packages/ZIPFA/index.html)**
+**Here is the tutorial for both versions. [(click)](https://zjph602xtc.github.io/ZIPFA/)**
 
 **This repository contains these files:**
 
