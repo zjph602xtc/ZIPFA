@@ -487,25 +487,25 @@ y[as.logical(Z)] &lt;- 0</code></pre>
 res &lt;- EMzeropoisson_mat(matrix(c(y,x1,x2),ncol=3), Madj = FALSE, intercept = TRUE)</code></pre>
 <pre><code>## Initialzing...</code></pre>
 <pre><code>## Start maximizing...</code></pre>
-<pre><code>## This is 2 th iteration, Frobenius norm diff = 0.189359.</code></pre>
-<pre><code>## This is 3 th iteration, Frobenius norm diff = 0.0546459.</code></pre>
-<pre><code>## This is 4 th iteration, Frobenius norm diff = 0.012237.</code></pre>
-<pre><code>## This is 5 th iteration, Frobenius norm diff = 0.00249965.</code></pre>
-<pre><code>## This is 6 th iteration, Frobenius norm diff = 0.000500609.</code></pre>
-<pre><code>## This is 7 th iteration, Frobenius norm diff = 9.98303e-05.</code></pre>
+<pre><code>## This is 2 th iteration, Frobenius norm diff = 0.194682.</code></pre>
+<pre><code>## This is 3 th iteration, Frobenius norm diff = 0.0514274.</code></pre>
+<pre><code>## This is 4 th iteration, Frobenius norm diff = 0.0109115.</code></pre>
+<pre><code>## This is 5 th iteration, Frobenius norm diff = 0.00214649.</code></pre>
+<pre><code>## This is 6 th iteration, Frobenius norm diff = 0.000415752.</code></pre>
+<pre><code>## This is 7 th iteration, Frobenius norm diff = 8.02723e-05.</code></pre>
 <pre class="r"><code>  # get fitted tau
 fittedtau &lt;- res[nrow(res),1]
 fittedtau</code></pre>
-<pre><code>## [1] 0.8072525</code></pre>
+<pre><code>## [1] 0.8039847</code></pre>
 <pre class="r"><code>  # get fitted intercept
 fittedintercept &lt;- res[nrow(res),2]
 fittedintercept</code></pre>
-<pre><code>## [1] 1.497553</code></pre>
+<pre><code>## [1] 1.500104</code></pre>
 <pre class="r"><code>  # get fitted beta
 fittedbeta &lt;- res[nrow(res),-(1:2)]
 fittedbeta</code></pre>
-<pre><code>## [1]  0.9988518 -2.0037521</code></pre>
-<p>We get the estimated intercept 1.498, <span class="math inline">\(\beta_1 =\)</span> 0.9989, <span class="math inline">\(\beta_2 =\)</span> -2.004, <span class="math inline">\(\tau =\)</span> 0.8073, which are the parameters we used to generate the data.</p>
+<pre><code>## [1]  1.000466 -1.998425</code></pre>
+<p>We get the estimated intercept 1.5, <span class="math inline">\(\beta_1 =\)</span> 1, <span class="math inline">\(\beta_2 =\)</span> -1.998, <span class="math inline">\(\tau =\)</span> 0.804, which are the parameters we used to generate the data.</p>
 <p><strong>Usage of</strong>  <span style="color: #EB6864;font-weight:bold">EMzeropoisson_mat()</span>: <br></p>
 <p><span style="color: #228B22;letter-spacing: 0.05em;">   fittedbeta &lt;- EMzeropoisson_mat(data, tau = 0.1, initial = NULL, initialtau = ‘iteration’, tol = 1e-4, maxiter = 100, Madj = FALSE, m = NULL, display = TRUE, intercept = TRUE)<br><br> – data: A matrix with the first columns is y and the rest columns are x.<br> – tau (0.1): Initial tau value to fit. Will be overwritten by the first value in initial argument.<br> – ‘initial’ (NULL): A list of initial values for the fitting. c(tau beta).<br> – ‘initialtau’ (‘iteration’): A character specifying the way to choose the initial value of tau at the beginning of EM iteration. <br>       ‘stable’: estimate tau from fitted beta in last round;<br>       ‘initial’: always use the initially assigned tau in ‘tau’ or ‘initial’;<br>           Use the default tau = 0.1 if ‘initial’ is empty.<br>       ‘iteration’: use fitted tau in last round.<br> – ‘tol’ (1e-4): Percentage of l2 norm change of [tau beta].<br> – ‘maxiter’ (100): Max iteration number.<br> – ‘Madj’ (FALSE): If TRUE then adjust for relative library size M.<br> – ‘m’ (NULL): A vector containing relative library size M.<br> – ‘display’ (TRUE): If TRUE display the fitting procedure.<br> – ‘intercept’ (TRUE): If TRUE then the model contains an intercept.<br> </span></p>
 <p>The function turns a matrix. Each row is fitted value in each iteration. The last row the final result. The first column is fitted <span class="math inline">\(\tau\)</span>. If intercept is TRUE, then the second column is the intercept, and the rest columns are other coefficients. If intercept is FALSE, the rest columns are other coefficients. <br><br></p>
@@ -600,14 +600,14 @@ likelihood</code></pre>
 <p><span style="color: #228B22;letter-spacing: 0.05em;">   res &lt;- ZIPFA(X, k, tau = 0.1, cut = 0.8, tolLnlikelihood = 5e-4, iter = 20, tol = 1e-4, maxiter = 100, initialtau = ‘iteration’, Madj = TRUE, display = TRUE, missing = NULL)<br><br> – X: The matrix to be decomposed.<br> – k: The number of factors.<br> – tau (0.1): Initial tau value to fit. Will be overwritten by the first value in initial argument.<br> – ‘cut’ (0.8): To delete columns that has more than 100(‘Cut’)% zeros. Cut = 1, if no filtering.<br> – ‘tolLnlikelihood’ (5e-4): The max percentage of log likelihood differences in two iterations.<br> – ‘iter’ (20): Max iteration number in the zero inflated poisson regression.<br> – ‘tol’ (1e-4): Percentage of l2 norm change of [tau beta] in ZIP regression.<br> – ‘maxiter’ (100): Max iterations in ZIP regression.<br> – ‘initialtau’ (‘iteration’): A character specifying the way to choose the initial value of tau at the beginning of EM iteration. <br>       ‘stable’: estimate tau from fitted beta in last round;<br>       ‘initial’: always use the initially assigned tau in ‘tau’ or ‘initial’;<br>         Use the default tau = 0.1 if ‘initial’ is empty.<br>       ‘iteration’: use fitted tau in last round.<br> – ‘Madj’ (TRUE): If TRUE then adjust for relative library size M.<br> – ‘display’ (TRUE): If TRUE display the fitting procedure.<br> – ‘missing’ (NULL): T/F matrix. If ‘missing’ is not empty, then CVLikelihood is likelihood of X with missing = T.<br> </span></p>
 <p>Result contains the fitted U (a list containing fitted U matrix in each iteration and the last one is the final fit), V (a list containing fitted U matrix in each iteration and the last one is the final fit), iteration number, model total likelihood.</p>
 <center>
-<img src="images/res.png" width="800" height="700"><br> Figure 2. Heatmap of <span class="math inline">\(\widehat U\widehat V^\top\)</span>. Blue histogram shows the distribution of fitted <span class="math inline">\(\widehat U\widehat V^\top\)</span>; Phylogenetic tree on the top and left shows clustering of taxa and samples.
+<img src="images/res.png" width="800" height="700"><br> Figure 2. Heatmap of <span class="math inline">\(\widehat U\widehat V^\top\)</span> under different percentage of inflated zeros. Blue histogram shows the distribution of fitted <span class="math inline">\(\widehat U\widehat V^\top\)</span>; Phylogenetic tree on the top and left shows clustering of taxa and samples.
 </center>
 <p><br></p>
 </div>
 <div id="cross-validation-to-choose-rank" class="section level3">
 <h3>2.3 Cross Validation to Choose Rank</h3>
-<p>We use function <span style="color: #EB6864;font-weight:bold">cv_ZIPFA()</span> to conduct the zero inflated Poisson factor analysis. <span style="color: #EB6864">(The R version is slow. Use the Matlab version if possible. Or reduce the number of fold.)</span></p>
-<pre class="r"><code>  # do cross validation with parallel computing (rank = 2 to 6)
+<p>We use function <span style="color: #EB6864;font-weight:bold">cv_ZIPFA()</span> to conduct the zero inflated Poisson factor analysis. <span style="color: #EB6864">(The R version is slow. Use the Matlab version if possible. Or reduce the number of folds.)</span></p>
+<pre class="r"><code>  # do cross validation without parallel computing (rank = 2 to 6)
 CVlikelihood &lt;- cv_ZIPFA(X, fold = 10, k = 2:6, Madj = F, parallel = F)
 
 apply(CVlikelihood,2,median)
