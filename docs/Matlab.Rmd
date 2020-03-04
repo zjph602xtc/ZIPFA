@@ -317,7 +317,7 @@ Result contains the fitted U, V, iteration number, model total likelihood.
 
 <center>
 <img src="images/res.png" width="800" height="700"><br>
-Figure 2. Heatmap of $\widehat U\widehat V^\top$. Blue histogram shows the distribution of fitted $\widehat U\widehat V^\top$; Phylogenetic tree on the top and left shows clustering of taxa and samples.
+Figure 2. Heatmap of $\widehat U\widehat V^\top$ under different percentage of inflated zeros. Blue histogram shows the distribution of fitted $\widehat U\widehat V^\top$; Phylogenetic tree on the top and left shows clustering of taxa and samples.
 </center>
 <br>
 

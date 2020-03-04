@@ -269,16 +269,16 @@ Result contains the fitted U (a list containing fitted U matrix in each iteratio
 
 <center>
 <img src="images/res.png" width="800" height="700"><br>
-Figure 2. Heatmap of $\widehat U\widehat V^\top$. Blue histogram shows the distribution of fitted $\widehat U\widehat V^\top$; Phylogenetic tree on the top and left shows clustering of taxa and samples.
+Figure 2. Heatmap of $\widehat U\widehat V^\top$ under different percentage of inflated zeros. Blue histogram shows the distribution of fitted $\widehat U\widehat V^\top$; Phylogenetic tree on the top and left shows clustering of taxa and samples.
 </center>
 <br>
 
 
 ### 2.3 Cross Validation to Choose Rank
-We use function <span style="color: #EB6864;font-weight:bold">cv_ZIPFA()</span> to conduct the zero inflated Poisson factor analysis. <span style="color: #EB6864">(The R version is slow. Use the Matlab version if possible. Or reduce the number of fold.)</span>
+We use function <span style="color: #EB6864;font-weight:bold">cv_ZIPFA()</span> to conduct the zero inflated Poisson factor analysis. <span style="color: #EB6864">(The R version is slow. Use the Matlab version if possible. Or reduce the number of folds.)</span>
 
 ```{r, eval=FALSE}
-  # do cross validation with parallel computing (rank = 2 to 6)
+  # do cross validation without parallel computing (rank = 2 to 6)
 CVlikelihood <- cv_ZIPFA(X, fold = 10, k = 2:6, Madj = F, parallel = F)
 
 apply(CVlikelihood,2,median)
