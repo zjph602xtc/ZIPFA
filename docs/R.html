@@ -487,25 +487,25 @@ y[as.logical(Z)] &lt;- 0</code></pre>
 res &lt;- EMzeropoisson_mat(matrix(c(y,x1,x2),ncol=3), Madj = FALSE, intercept = TRUE)</code></pre>
 <pre><code>## Initialzing...</code></pre>
 <pre><code>## Start maximizing...</code></pre>
-<pre><code>## This is 2 th iteration, Frobenius norm diff = 0.194682.</code></pre>
-<pre><code>## This is 3 th iteration, Frobenius norm diff = 0.0514274.</code></pre>
-<pre><code>## This is 4 th iteration, Frobenius norm diff = 0.0109115.</code></pre>
-<pre><code>## This is 5 th iteration, Frobenius norm diff = 0.00214649.</code></pre>
-<pre><code>## This is 6 th iteration, Frobenius norm diff = 0.000415752.</code></pre>
-<pre><code>## This is 7 th iteration, Frobenius norm diff = 8.02723e-05.</code></pre>
+<pre><code>## This is 2 th iteration, Frobenius norm diff = 0.186327.</code></pre>
+<pre><code>## This is 3 th iteration, Frobenius norm diff = 0.0476255.</code></pre>
+<pre><code>## This is 4 th iteration, Frobenius norm diff = 0.00976385.</code></pre>
+<pre><code>## This is 5 th iteration, Frobenius norm diff = 0.00185416.</code></pre>
+<pre><code>## This is 6 th iteration, Frobenius norm diff = 0.000346737.</code></pre>
+<pre><code>## This is 7 th iteration, Frobenius norm diff = 6.46548e-05.</code></pre>
 <pre class="r"><code>  # get fitted tau
 fittedtau &lt;- res[nrow(res),1]
 fittedtau</code></pre>
-<pre><code>## [1] 0.8039847</code></pre>
+<pre><code>## [1] 0.7653681</code></pre>
 <pre class="r"><code>  # get fitted intercept
 fittedintercept &lt;- res[nrow(res),2]
 fittedintercept</code></pre>
-<pre><code>## [1] 1.500104</code></pre>
+<pre><code>## [1] 1.50815</code></pre>
 <pre class="r"><code>  # get fitted beta
 fittedbeta &lt;- res[nrow(res),-(1:2)]
 fittedbeta</code></pre>
-<pre><code>## [1]  1.000466 -1.998425</code></pre>
-<p>We get the estimated intercept 1.5, <span class="math inline">\(\beta_1 =\)</span> 1, <span class="math inline">\(\beta_2 =\)</span> -1.998, <span class="math inline">\(\tau =\)</span> 0.804, which are the parameters we used to generate the data.</p>
+<pre><code>## [1]  0.9997759 -1.9974022</code></pre>
+<p>We get the estimated intercept 1.508, <span class="math inline">\(\beta_1 =\)</span> 0.9998, <span class="math inline">\(\beta_2 =\)</span> -1.997, <span class="math inline">\(\tau =\)</span> 0.7654, which are the parameters we used to generate the data.</p>
 <p><strong>Usage of</strong>  <span style="color: #EB6864;font-weight:bold">EMzeropoisson_mat()</span>: <br></p>
 <p><span style="color: #228B22;letter-spacing: 0.05em;">   fittedbeta &lt;- EMzeropoisson_mat(data, tau = 0.1, initial = NULL, initialtau = ‘iteration’, tol = 1e-4, maxiter = 100, Madj = FALSE, m = NULL, display = TRUE, intercept = TRUE)<br><br> – data: A matrix with the first columns is y and the rest columns are x.<br> – tau (0.1): Initial tau value to fit. Will be overwritten by the first value in initial argument.<br> – ‘initial’ (NULL): A list of initial values for the fitting. c(tau beta).<br> – ‘initialtau’ (‘iteration’): A character specifying the way to choose the initial value of tau at the beginning of EM iteration. <br>       ‘stable’: estimate tau from fitted beta in last round;<br>       ‘initial’: always use the initially assigned tau in ‘tau’ or ‘initial’;<br>           Use the default tau = 0.1 if ‘initial’ is empty.<br>       ‘iteration’: use fitted tau in last round.<br> – ‘tol’ (1e-4): Percentage of l2 norm change of [tau beta].<br> – ‘maxiter’ (100): Max iteration number.<br> – ‘Madj’ (FALSE): If TRUE then adjust for relative library size M.<br> – ‘m’ (NULL): A vector containing relative library size M.<br> – ‘display’ (TRUE): If TRUE display the fitting procedure.<br> – ‘intercept’ (TRUE): If TRUE then the model contains an intercept.<br> </span></p>
 <p>The function turns a matrix. Each row is fitted value in each iteration. The last row the final result. The first column is fitted <span class="math inline">\(\tau\)</span>. If intercept is TRUE, then the second column is the intercept, and the rest columns are other coefficients. If intercept is FALSE, the rest columns are other coefficients. <br><br></p>
