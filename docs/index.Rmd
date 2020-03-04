@@ -9,6 +9,8 @@ output:
 <br>
 <br>
 <!-- <span style="color:#2C85C2; font-family: Babas; font-size: 1em;">Final Project for Dr. Jeff Goldsmith's Course - [P8105 Data Science I](https://p8105.com)</span><right><img src = "images/sticker.jpg" style = "width:5%"> </right></br> -->
+**See tutorial on the [Matlab version](https://zjph602xtc.github.io/ZIPFA/Matlab.html) or [R version](https://zjph602xtc.github.io/ZIPFA/R.html).**
+
 <span style="color:#2C85C2; font-family: Babas; font-size: 2em;">Authors: </span>
 
 Tianchen Xu$^{*}$, &nbsp;&nbsp; tx2155\@columbia.edu,  &nbsp;&nbsp; Department of Biostatistics, Mailman School of Public Health, Columbia University, NY 10032, USA <br><br>
