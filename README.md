@@ -1,12 +1,18 @@
-# ZIPFA
-Zero inflated poison factor analysis
+# Zero inflated poison factor analysis
+
+<br>
+
+**The method has a Matlab version and R version. The Matlab version codes are in this repository. The R version is on CRAN [(click)](https://cran.rstudio.com/web/packages/ZIPFA/index.html)**
+
+**Here is the tutorial for both versions. [(click)](https://cran.rstudio.com/web/packages/ZIPFA/index.html)**
+
+**This repository contains these files:**
 
 'EMzeropoisson_mat.m': Zero inflated Poisson regression.\
 'ZIPFA.m': Zero inflated Poisson factor analysis. \
 'cv_ZIPFA.m': Cross validation on ZIPFA.\
 'Examples codes.m': Example runs for 'EMzeropoisson_mat.m', 'ZIPFA.m', 'cv_ZIPFA.m'.\
 'Table and Figure in paper.m': All tables and figures in the paper. 
-
 
 In the 'Codes for paper' fold:\
 'gomms.R': GOMMS model.\
@@ -26,4 +32,5 @@ In the 'Codes for paper' fold:\
 
 'final_sim' folder: Simulated data for figure 3.\
 'simu' folder: Simulated data for table 1.
+   
 

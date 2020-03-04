@@ -1,0 +1,19 @@
+---
+title: "Zero Inflated Poisson Factor Analysis"
+output: 
+  html_document
+---
+
+<center><img src = "images/cover.png" style = "width:70%"> </center>
+
+<br>
+<br>
+<!-- <span style="color:#2C85C2; font-family: Babas; font-size: 1em;">Final Project for Dr. Jeff Goldsmith's Course - [P8105 Data Science I](https://p8105.com)</span><right><img src = "images/sticker.jpg" style = "width:5%"> </right></br> -->
+<span style="color:#2C85C2; font-family: Babas; font-size: 2em;">Authors: </span>
+
+Tianchen Xu$^{*}$, &nbsp;&nbsp; tx2155\@columbia.edu,  &nbsp;&nbsp; Department of Biostatistics, Mailman School of Public Health, Columbia University, NY 10032, USA <br><br>
+
+Ryan T. Demmer, &nbsp;&nbsp; demm0009\@umn.edu,  &nbsp;&nbsp; Division of Epidemiology, School of Public Health, University of Minnesota, MN 55454, USA <br><br>
+
+Gen Li, &nbsp;&nbsp; gl2521\@cumc.columbia.edu,   &nbsp;&nbsp; Department of Biostatistics, Mailman School of Public Health, Columbia University, NY 10032, USA
+

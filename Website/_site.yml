@@ -1,0 +1,16 @@
+name: "Zero Inflated Poisson Factor Analysis"
+output_dir: "."
+navbar:
+  title: "Home"
+  right:
+    - text: "Matlab Version"
+      href: Matlab.html
+    - text: "R Version"
+      href: R.html
+    - icon: fa-github fa-lg
+      href: https://github.com/zjph602xtc/ZIPFA
+
+output:
+  html_document:
+   theme: lumen
+  

@@ -1,0 +1,656 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<meta charset="utf-8" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+
+
+
+
+<title>Zero Inflated Poisson Factor Analysis (R Verison)</title>
+
+<script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/lumen.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<script src="site_libs/jqueryui-1.11.4/jquery-ui.min.js"></script>
+<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<script src="site_libs/navigation-1.1/codefolding.js"></script>
+<link href="site_libs/highlightjs-9.12.0/default.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+<link href="site_libs/font-awesome-5.1.0/css/all.css" rel="stylesheet" />
+<link href="site_libs/font-awesome-5.1.0/css/v4-shims.css" rel="stylesheet" />
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css">
+  pre:not([class]) {
+    background-color: white;
+  }
+</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+<style type="text/css">
+h1 {
+  font-size: 34px;
+}
+h1.title {
+  font-size: 38px;
+}
+h2 {
+  font-size: 30px;
+}
+h3 {
+  font-size: 24px;
+}
+h4 {
+  font-size: 18px;
+}
+h5 {
+  font-size: 16px;
+}
+h6 {
+  font-size: 12px;
+}
+.table th:not([align]) {
+  text-align: left;
+}
+</style>
+
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+code {
+  color: inherit;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+img {
+  max-width:100%;
+  height: auto;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+</style>
+
+
+<style type="text/css">
+/* padding for bootstrap navbar */
+body {
+  padding-top: 54px;
+  padding-bottom: 40px;
+}
+/* offset scroll position for anchor links (for fixed navbar)  */
+.section h1 {
+  padding-top: 59px;
+  margin-top: -59px;
+}
+.section h2 {
+  padding-top: 59px;
+  margin-top: -59px;
+}
+.section h3 {
+  padding-top: 59px;
+  margin-top: -59px;
+}
+.section h4 {
+  padding-top: 59px;
+  margin-top: -59px;
+}
+.section h5 {
+  padding-top: 59px;
+  margin-top: -59px;
+}
+.section h6 {
+  padding-top: 59px;
+  margin-top: -59px;
+}
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #ffffff;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script>
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark it active
+  menuAnchor.parent().addClass('active');
+
+  // if it's got a parent navbar menu mark it active as well
+  menuAnchor.closest('li.dropdown').addClass('active');
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "&#xe258;";
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open')
+  });
+});
+</script>
+
+<!-- code folding -->
+<style type="text/css">
+.code-folding-btn { margin-bottom: 4px; }
+</style>
+<script>
+$(document).ready(function () {
+  window.initializeCodeFolding("show" === "show");
+});
+</script>
+
+
+
+<script>
+$(document).ready(function ()  {
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_').toLowerCase();
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = true;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
+
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+  padding-left: 25px;
+  text-indent: 0;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+
+</style>
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row-fluid">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">Home</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li>
+  <a href="Matlab.html">Matlab Version</a>
+</li>
+<li>
+  <a href="R.html">R Version</a>
+</li>
+<li>
+  <a href="https://github.com/zjph602xtc/ZIPFA">
+    <span class="fa fa-github fa-lg"></span>
+     
+  </a>
+</li>
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div class="fluid-row" id="header">
+
+<div class="btn-group pull-right">
+<button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span>Code</span> <span class="caret"></span></button>
+<ul class="dropdown-menu" style="min-width: 50px;">
+<li><a id="rmd-show-all-code" href="#">Show All Code</a></li>
+<li><a id="rmd-hide-all-code" href="#">Hide All Code</a></li>
+</ul>
+</div>
+
+
+
+<h1 class="title toc-ignore">Zero Inflated Poisson Factor Analysis (R Verison)</h1>
+
+</div>
+
+
+<p><br><br></p>
+<div id="install-package-zipfa" class="section level1">
+<h1>0. Install Package ‘ZIPFA’</h1>
+<p>You need to install package <a href="https://cran.r-project.org/web/packages/optimx/index.html">optimx</a>, <a href="https://cran.r-project.org/web/packages/trustOptim/index.html">trustOptim</a> before installing <a href="https://cran.rstudio.com/web/packages/ZIPFA/index.html">ZIPFA</a>.</p>
+<pre class="r"><code>install.packages(&#39;optimx&#39;)
+install.packages(&#39;trustOptim&#39;)
+install.packages(&#39;ZIPFA&#39;)
+library(&#39;Matrix&#39;)
+library(&#39;parallel&#39;)
+library(&#39;doParallel&#39;)
+library(&#39;foreach&#39;)
+library(&#39;optimx&#39;)
+library(&#39;trustOptim&#39;)
+library(&#39;ZIPFA&#39;)</code></pre>
+<p><br><br></p>
+</div>
+<div id="zero-inflated-poisson-regression" class="section level1">
+<h1>1. Zero Inflated Poisson Regression</h1>
+<p>Let’s introduce the zero inflated Poisson regression where the logit true zero probability is negatively associated with log Poisson expectation.</p>
+<p>Let the response variable be <span class="math inline">\(Y=(y_1,y_2,\ldots,y_n)^\top\)</span> following a zero-inflated Poisson distribution:</p>
+<p><span class="math display">\[
+        Y_i\sim \begin{cases}
+    0, &amp; \text{with prob} = p_i\\
+    Poisson(m_i \lambda_i), &amp; \text{with prob} = 1-p_i
+    \end{cases}
+\]</span> where <span class="math inline">\(m=(m_1,m_2,\cdots,m_n)^\top\)</span> is the known scaling vector and <span style="color: #EB6864;"> takes the value of constant 1 in most cases</span>. Let <span class="math inline">\(X\)</span> be an <span class="math inline">\(n\)</span> by <span class="math inline">\(p\)</span> design matrix, where column vector <span class="math inline">\(X_i\)</span> denotes the i row of <span class="math inline">\(X\)</span>; <span class="math inline">\(\beta =(b_1, b_2,\ldots, b_{p})^\top\)</span> is the coefficient vector to be estimated.</p>
+<p>With the aforementioned relationship between <span class="math inline">\(p_i\)</span> and <span class="math inline">\(\lambda_i\)</span>, the model satisfies: <span class="math display">\[
+        \ln \operatorname{E}(Y_i/m_i|X_i)=\ln(\lambda_i)=X_i^\top\beta \qquad \text{and}\qquad  \text{logit}(p_i)=-\tau\ln(\lambda_i).
+\]</span> <br></p>
+<div id="simulation-data" class="section level3">
+<h3>1.1 Simulation Data</h3>
+<pre class="r"><code>  # sample size
+n &lt;- 5000
+  # variable x1
+x1 &lt;- rnorm(n)
+  # variable x2
+x2 &lt;- rnorm(n)
+  # beta_0 = 1.5, beta_1 = 1, beta_2 = -2
+lam &lt;- exp(x1 - 2*x2 + 1.5)
+  # generate the Poisson part, m = 1
+y &lt;- rpois(n, lam)
+  # tau = 0.75
+tau &lt;- 0.75
+  # true zero prabability p
+p &lt;- 1./(1+lam^tau)
+Z &lt;- rbinom(n, 1, p)
+  # replace some values with true zeros
+y[as.logical(Z)] &lt;- 0</code></pre>
+<p><br></p>
+</div>
+<div id="model-estimation" class="section level3">
+<h3>1.2 Model Estimation</h3>
+<p>We use function <span style="color: #EB6864;font-weight:bold">EMzeropoisson_mat()</span> to build the zero inflated Poisson regression.</p>
+<pre class="r"><code>  # run the regression
+res &lt;- EMzeropoisson_mat(matrix(c(y,x1,x2),ncol=3), Madj = FALSE, intercept = TRUE)</code></pre>
+<pre><code>## Initialzing...</code></pre>
+<pre><code>## Start maximizing...</code></pre>
+<pre><code>## This is 2 th iteration, Frobenius norm diff = 0.189359.</code></pre>
+<pre><code>## This is 3 th iteration, Frobenius norm diff = 0.0546459.</code></pre>
+<pre><code>## This is 4 th iteration, Frobenius norm diff = 0.012237.</code></pre>
+<pre><code>## This is 5 th iteration, Frobenius norm diff = 0.00249965.</code></pre>
+<pre><code>## This is 6 th iteration, Frobenius norm diff = 0.000500609.</code></pre>
+<pre><code>## This is 7 th iteration, Frobenius norm diff = 9.98303e-05.</code></pre>
+<pre class="r"><code>  # get fitted tau
+fittedtau &lt;- res[nrow(res),1]
+fittedtau</code></pre>
+<pre><code>## [1] 0.8072525</code></pre>
+<pre class="r"><code>  # get fitted intercept
+fittedintercept &lt;- res[nrow(res),2]
+fittedintercept</code></pre>
+<pre><code>## [1] 1.497553</code></pre>
+<pre class="r"><code>  # get fitted beta
+fittedbeta &lt;- res[nrow(res),-(1:2)]
+fittedbeta</code></pre>
+<pre><code>## [1]  0.9988518 -2.0037521</code></pre>
+<p>We get the estimated intercept 1.498, <span class="math inline">\(\beta_1 =\)</span> 0.9989, <span class="math inline">\(\beta_2 =\)</span> -2.004, <span class="math inline">\(\tau =\)</span> 0.8073, which are the parameters we used to generate the data.</p>
+<p><strong>Usage of</strong>  <span style="color: #EB6864;font-weight:bold">EMzeropoisson_mat()</span>: <br></p>
+<p><span style="color: #228B22;letter-spacing: 0.05em;">   fittedbeta &lt;- EMzeropoisson_mat(data, tau = 0.1, initial = NULL, initialtau = ‘iteration’, tol = 1e-4, maxiter = 100, Madj = FALSE, m = NULL, display = TRUE, intercept = TRUE)<br><br> – data: A matrix with the first columns is y and the rest columns are x.<br> – tau (0.1): Initial tau value to fit. Will be overwritten by the first value in initial argument.<br> – ‘initial’ (NULL): A list of initial values for the fitting. c(tau beta).<br> – ‘initialtau’ (‘iteration’): A character specifying the way to choose the initial value of tau at the beginning of EM iteration. <br>       ‘stable’: estimate tau from fitted beta in last round;<br>       ‘initial’: always use the initially assigned tau in ‘tau’ or ‘initial’;<br>           Use the default tau = 0.1 if ‘initial’ is empty.<br>       ‘iteration’: use fitted tau in last round.<br> – ‘tol’ (1e-4): Percentage of l2 norm change of [tau beta].<br> – ‘maxiter’ (100): Max iteration number.<br> – ‘Madj’ (FALSE): If TRUE then adjust for relative library size M.<br> – ‘m’ (NULL): A vector containing relative library size M.<br> – ‘display’ (TRUE): If TRUE display the fitting procedure.<br> – ‘intercept’ (TRUE): If TRUE then the model contains an intercept.<br> </span></p>
+<p>The function turns a matrix. Each row is fitted value in each iteration. The last row the final result. The first column is fitted <span class="math inline">\(\tau\)</span>. If intercept is TRUE, then the second column is the intercept, and the rest columns are other coefficients. If intercept is FALSE, the rest columns are other coefficients. <br><br></p>
+</div>
+</div>
+<div id="zero-inflated-poisson-factor-analysis" class="section level1">
+<h1>2. Zero Inflated Poisson Factor Analysis</h1>
+<p>In microbiome studies, the absolute sequencing read counts are summarized in a matrix <span class="math inline">\(A \in \mathbb{N}_0^{n\times m}\)</span>, where <span class="math inline">\(n\)</span> is the sample size and <span class="math inline">\(m\)</span> is the number of taxa. Let <span class="math inline">\(A_{ij}\)</span> represents the read count of taxon <span class="math inline">\(j\)</span> of individual <span class="math inline">\(i\)</span> <span class="math inline">\((i=1,\cdots,n;\, j=1,\cdots,m)\)</span>. Let <span class="math inline">\(N = (N_1,N_2,\cdots,N_n)^\top\)</span> a be vector of the relative library sizes where: <span class="math display">\[
+    N_i =\sum_{j=1}^m A_{ij}\bigg/\operatorname{median}\left( \sum_{j=1}^m A_{1j},\; \sum_{j=1}^m A_{2j},\; \cdots,\; \sum_{j=1}^m A_{nj} \right).
+\]</span> Since excessive zeros may come from true absence or undetected presence of taxa, a mixed distribution is proper to describe <span class="math inline">\(A_{ij}\)</span>. It is reasonable to assume each read count <span class="math inline">\(A_{ij}\)</span> follows a zero-inflated Poisson (ZIP) distribution: <span class="math display">\[
+    A_{ij}\sim
+    \begin{cases}
+    0, &amp; \text{with prob }= p_{ij}\\
+    Poisson(N_i\lambda_{ij}), &amp; \text{with prob }= 1-p_{ij}
+    \end{cases}
+\]</span> where <span class="math inline">\(p_{ij}\; (0\le p_{ij} \le 1)\)</span> is the unknown parameter of the Bernoulli distribution that describes the occurrence of true zeros; <span class="math inline">\(\lambda_{ij}\; (\lambda&gt;0)\)</span> is the unknown parameter of the normalized Poisson part, and <span class="math inline">\(N_i \lambda_{ij}\)</span> is the Poisson rate adjusted by the subject-specific relative library size <span class="math inline">\(N_{i}\)</span>. Then let <span class="math inline">\(P = \operatorname{logit}(p_{ij}) \in \mathbb{R}^{n\times m}\)</span> and <span class="math inline">\(\Lambda = \ln( \lambda_{ij})\in \mathbb{R}^{n\times m}\)</span> be the corresponding natural parameter matrices to map parameters <span class="math inline">\(p_{ij}\)</span>, <span class="math inline">\(\lambda_{ij}\)</span> to the real line.</p>
+<p>To link the negative relationship between true zero probability <span class="math inline">\(p_{ij}\)</span> and Poisson rate <span class="math inline">\(\lambda_{ij}\)</span>, we propose to use a positive shape parameter <span class="math inline">\(\tau\)</span> to build the logistic link by modeling <span class="math inline">\(P=-\tau \Lambda\)</span> (i.e., <span class="math inline">\(\operatorname{logit}(p_{ij})=-\tau \ln(\lambda_{ij})\)</span>).</p>
+<p>To encourage dimension reduction, we assume matrix <span class="math inline">\(\Lambda \in \mathbb{R}^{n\times m}\)</span> has a low rank structure <span class="math inline">\(\Lambda = UV^\top\)</span> with rank <span class="math inline">\(K&lt;\min(m, n)\)</span>, where <span class="math inline">\(U\in \mathbb{R}^{n\times K}\)</span> is the score matrix; <span class="math inline">\(V \in \mathbb{R}^{m\times K}\)</span> is the loading matrix. Then the proposed ZIPFA model with rank <span class="math inline">\(K\)</span> is given by: <span class="math display">\[
+        \begin{cases}
+A_{ij}\sim \text{ZIP distribution}\\
+\operatorname{logit}(p_{ij})=-\tau \ln(\lambda_{ij}) \\
+%\quad \left(p_{ij}=\frac{1}{1+\lambda_{ij}^\tau}\right)\\
+\ln (\lambda_{ij})=u_{i1}v_{j1}+u_{i2}v_{j2}+\cdots+u_{iK}v_{jK}
+\end{cases}
+\]</span> where <span class="math inline">\(u_{ij}\)</span>, <span class="math inline">\(v_{ij}\)</span> are elements of <span class="math inline">\(U\)</span>, <span class="math inline">\(V\)</span>. Here, <span class="math inline">\(u_{ij}\)</span> represents the j factor score for the i individual, and <span class="math inline">\(v_{ij}\)</span> is the i taxon loading on j factor.</p>
+<p><br></p>
+<div id="simulation-data-1" class="section level3">
+<h3>2.1 Simulation Data</h3>
+<p>We generate rank-3 synthetic NGS data of <span class="math inline">\(200\)</span> samples (<span class="math inline">\(n=200\)</span>) and <span class="math inline">\(100\)</span> taxa (<span class="math inline">\(m=100\)</span>) according to the model assumption. The Poisson logarithmic rate matrix <span class="math inline">\(\Lambda=UV^\top\)</span>, where <span class="math inline">\(U\in \mathbb{R}^{m\times 3}\)</span> is a left singular vector matrix, and <span class="math inline">\(V\in \mathbb{R}^{n\times 3}\)</span> is a right singular vector matrix. We consider three different clustering patterns in the samples as depicted in <span class="math inline">\(U\)</span>. To generate <span class="math inline">\(U\)</span>, we create a 200-by-3 matrix <span class="math inline">\(U\)</span> such that: <span class="math display">\[\begin{alignat*}{2}
+    &amp;U(36:80,1)=2.0,&amp;\qquad &amp;U(81:140,1)=1.7\\
+    &amp;U(1:35,2)=1.8,&amp;\qquad &amp;U(36:80,2)=0.9\\
+    &amp;U(36:200,3)=1.7&amp;&amp;
+\end{alignat*}\]</span> with all the other entries being 0, and then jitter all the entries by adding random numbers generated from <span class="math inline">\(N(0, 0.06^2\)</span>). Similarly, To generate <span class="math inline">\(V\)</span>, we create a 100-by-3 matrix <span class="math inline">\(V\)</span> such that: <span class="math display">\[\begin{alignat*}{2}
+    &amp;V(61:100,1)=1.7&amp; &amp;\\
+    &amp;V(36:60,2)=1.7,&amp;\qquad &amp;V(61:100,2)=1.0\\
+    &amp;V(1:25,3)=1.7,&amp;\qquad&amp; V(26:100,3)=0.9
+\end{alignat*}\]</span> with all the other entries being 0, and then jitter all the entries by adding random numbers generated from <span class="math inline">\(N(0, 0.05^2)\)</span>. The three columns of <span class="math inline">\(U\)</span> and <span class="math inline">\(V\)</span> are plotted in the columns of Figure 1(a) and the true <span class="math inline">\(\ln(\lambda)\)</span> matrix is plotted in Figure 1(b). Each row in <span class="math inline">\(U\)</span> corresponds to one sample and each row in <span class="math inline">\(V\)</span> indicates one taxon profile. In Figure 1(c),(d), we applied complete linkage hierarchical clustering to <span class="math inline">\(U\)</span>, <span class="math inline">\(V\)</span>. It is clear that both taxa and samples could be clustered into <span class="math inline">\(4\)</span> groups.</p>
+<p>We generate matrix <span class="math inline">\(A^\circ\)</span> that <span class="math inline">\(A_{ij}^\circ \sim Poisson(N_i\lambda_{ij})\)</span> where the scaling parameter <span class="math inline">\(N_i\)</span> is set to be <span class="math inline">\(1\)</span>. Also we need true zero probability <span class="math inline">\(p_{ij}\)</span> to generate inflated zeros:</p>
+<p><span class="math display">\[
+\operatorname{logit}(p_{ij})=-\tau \ln(\lambda_{ij}) \quad (p_{ij}=\frac{1}{1+\lambda_{ij}^\tau})
+\]</span></p>
+<p>We adjust the total percentage of excessive zeros by setting different <span class="math inline">\(\tau\)</span> values. Once <span class="math inline">\(p_{ij}\)</span> is generated, our simulated NGS data matrix <span class="math inline">\(A\)</span> can be obtained by replacing <span class="math inline">\(A^\circ_{ij}\)</span> with <span class="math inline">\(0\)</span> with the probability of <span class="math inline">\(p_{ij}\)</span>.</p>
+<center>
+<img src="images/u_and_v.png" width="700" height="700"><br> Figure 1. Plots of simulation parameters. (a) True left singular vectors <span class="math inline">\(U\)</span> and true right singular vector <span class="math inline">\(V\)</span>, indicating taxon clusters. (b) Heatmap of true <span class="math inline">\(\ln(\lambda)\)</span> matrix. (c)(d) The factor values for each sample/taxa. They could be clustered into 4 groups.
+</center>
+<pre class="r"><code>set.seed(1)
+  # Matrix U, V
+u &lt;- c(rep(0,35), rep(2,45), rep(1.7, 60), rep(0,60), rep(1.8,35), rep(0.9,45), rep(0,120), rep(0,35), rep(1.7,165))
+u &lt;- matrix(u, byrow = F, ncol = 3)
+vt &lt;- c(rep(0,30), rep(0,30), rep(1.7,40), rep(0,35), rep(1.7,25), rep(1,40), rep(1.7,25), rep(0.9,50), rep(0.9,25))
+vt &lt;- matrix(vt, byrow = T, nrow = 3)
+u &lt;- rnorm(600,0,0.06)+u
+vt &lt;- rnorm(300,0,0.05)+vt
+  # Lambda matrix
+a &lt;- u %*% vt
+  # lambda_{ij}
+lambda &lt;- exp(a)
+  # Poisson Part
+X &lt;- rpois(20000, lambda)
+X &lt;- matrix(X, byrow = F, nrow = 200)
+  # tau value
+tau &lt;- 0.616
+  # add true zeros
+P &lt;- 1./(1+lambda^tau)
+Z &lt;- rbinom(20000,size = 1,P)
+X[as.logical(Z)] &lt;- 0</code></pre>
+<p><br></p>
+</div>
+<div id="model-estimation-with-specified-rank" class="section level3">
+<h3>2.2 Model Estimation with Specified Rank</h3>
+<p>We use function <span style="color: #EB6864;font-weight:bold">ZIPFA()</span> to conduct the zero inflated Poisson factor analysis.</p>
+<pre class="r"><code>  # run the model (rank = 3)
+res &lt;- ZIPFA(X, k = 3, Madj = F, display = F)
+
+  # fitted U, V
+fittedU &lt;- res$Ufit[[res$itr]]
+fittedV &lt;- res$Vfit[[res$itr]]
+
+  # iteration number, fitted tau, likelihood in each iteration
+itr &lt;- res$itr
+itr</code></pre>
+<pre><code>## [1] 4</code></pre>
+<pre class="r"><code>fittedtau &lt;- res$tau
+fittedtau</code></pre>
+<pre><code>##           
+## 0.6056028</code></pre>
+<pre class="r"><code>likelihood &lt;- res$Likelihood
+likelihood</code></pre>
+<pre><code>## [1] -56705.30 -53082.90 -52994.18 -52982.86</code></pre>
+<p>The algorithm converges in 4 iterations with fitted <span class="math inline">\(\tau =\)</span> 0.6056. The likelihood increases during the fitting procedure. The heatmap of <span class="math inline">\(U V^\top\)</span> is in Figure 2.</p>
+<p><strong>Usage of</strong>  <span style="color: #EB6864;font-weight:bold">ZIPFA()</span>: <br></p>
+<p><span style="color: #228B22;letter-spacing: 0.05em;">   res &lt;- ZIPFA(X, k, tau = 0.1, cut = 0.8, tolLnlikelihood = 5e-4, iter = 20, tol = 1e-4, maxiter = 100, initialtau = ‘iteration’, Madj = TRUE, display = TRUE, missing = NULL)<br><br> – X: The matrix to be decomposed.<br> – k: The number of factors.<br> – tau (0.1): Initial tau value to fit. Will be overwritten by the first value in initial argument.<br> – ‘cut’ (0.8): To delete columns that has more than 100(‘Cut’)% zeros. Cut = 1, if no filtering.<br> – ‘tolLnlikelihood’ (5e-4): The max percentage of log likelihood differences in two iterations.<br> – ‘iter’ (20): Max iteration number in the zero inflated poisson regression.<br> – ‘tol’ (1e-4): Percentage of l2 norm change of [tau beta] in ZIP regression.<br> – ‘maxiter’ (100): Max iterations in ZIP regression.<br> – ‘initialtau’ (‘iteration’): A character specifying the way to choose the initial value of tau at the beginning of EM iteration. <br>       ‘stable’: estimate tau from fitted beta in last round;<br>       ‘initial’: always use the initially assigned tau in ‘tau’ or ‘initial’;<br>         Use the default tau = 0.1 if ‘initial’ is empty.<br>       ‘iteration’: use fitted tau in last round.<br> – ‘Madj’ (TRUE): If TRUE then adjust for relative library size M.<br> – ‘display’ (TRUE): If TRUE display the fitting procedure.<br> – ‘missing’ (NULL): T/F matrix. If ‘missing’ is not empty, then CVLikelihood is likelihood of X with missing = T.<br> </span></p>
+<p>Result contains the fitted U (a list containing fitted U matrix in each iteration and the last one is the final fit), V (a list containing fitted U matrix in each iteration and the last one is the final fit), iteration number, model total likelihood.</p>
+<center>
+<img src="images/res.png" width="800" height="700"><br> Figure 2. Heatmap of <span class="math inline">\(\widehat U\widehat V^\top\)</span>. Blue histogram shows the distribution of fitted <span class="math inline">\(\widehat U\widehat V^\top\)</span>; Phylogenetic tree on the top and left shows clustering of taxa and samples.
+</center>
+<p><br></p>
+</div>
+<div id="cross-validation-to-choose-rank" class="section level3">
+<h3>2.3 Cross Validation to Choose Rank</h3>
+<p>We use function <span style="color: #EB6864;font-weight:bold">cv_ZIPFA()</span> to conduct the zero inflated Poisson factor analysis. <span style="color: #EB6864">(The R version is slow. Use the Matlab version if possible. Or reduce the number of fold.)</span></p>
+<pre class="r"><code>  # do cross validation with parallel computing (rank = 2 to 6)
+CVlikelihood &lt;- cv_ZIPFA(X, fold = 10, k = 2:6, Madj = F, parallel = F)
+
+apply(CVlikelihood,2,median)
+
+   -6796   -5380   -5400   -5426   -5462</code></pre>
+<p>The function returns a matrix. Each row in ‘CVlikelihood’ represents the CV likelihood of one fold and each column is for specified rank (from 2 to 6). The median CV likelihood reaches its maximum value when rank equals to 3 in Figure 3, which is the rank we used to generate the simulation data.</p>
+<p><strong>Usage of</strong>  <span style="color: #EB6864;font-weight:bold">cv_ZIPFA()</span>: <br></p>
+<p><span style="color: #228B22;letter-spacing: 0.05em;">   CVlikelihood &lt;- cv_ZIPFA(X, k, fold, tau = 0.1, cut = 0.8, tolLnlikelihood = 5e-4, iter = 20, tol = 1e-4, maxiter = 100, initialtau = ‘iteration’, Madj = TRUE, display = TRUE, parallel = FALSE)<br><br> – X: The matrix to be decomposed.<br> – k: A vector containing the number of factors to try.<br> – fold (10): The number of folds used in cross validation.<br> – tau (0.1): Initial tau value to fit. Will be overwritten by the first value in initial argument.<br> – ‘cut’ (0.8): To delete columns that has more than 100(‘Cut’)% zeros. Cut = 1, if no filtering.<br> – ‘tolLnlikelihood’ (5e-4): The max percentage of log likelihood differences in two iterations.<br> – ‘iter’ (20): Max iteration number in the zero inflated poisson regression.<br> – ‘tol’ (1e-4): Percentage of l2 norm change of [tau beta] in ZIP regression.<br> – ‘maxiter’ (100): Max iterations in ZIP regression.<br> – ‘initialtau’ (iteration’): A character specifying the way to choose the initial value of tau at the beginning of EM iteration. <br>       ‘stable’: estimate tau from fitted beta in last round;<br>       ‘initial’: always use the initially assigned tau in ‘tau’ or ‘initial’;<br>           Use the default tau = 0.1 if ‘initial’ is empty.<br>       ‘iteration’: use fitted tau in last round.<br> – ‘Madj’ (TRUE): If TRUE then adjust for relative library size M.<br> – ‘display’ (TRUE): If TRUE display the fitting procedure. Info in ZIPFA will not be shown in ‘Parallel’ mode even ‘Display’ is TRUE<br> – ‘parallel’ (FALSE): Use doParallel and foreach package to accelerate. </span></p>
+<center>
+<img src="images/ccv.png" width="500" height="700"><br> Figure 3. CV likelihood vs. number of ranks
+</center>
+</div>
+</div>
+
+
+
+</div>
+</div>
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>
