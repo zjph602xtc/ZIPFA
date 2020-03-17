@@ -1,9 +1,9 @@
 function [startvar] = EMzeropoisson_mat(data, varargin)
 % EMzeropoisson_mat  To fit the zero inflated Poisson regression.
 %   fittedbeta = EMzeropoisson_mat([y x])
-%
+% 
 %   fittedbeta = EMzeropoisson_mat([y x], tau, 'display', false, ...)
-%
+% 
 % -data: First y then x.
 % -tau (0.1): Initial tau to fit. Will be overwritten by 'initial'.
 % -'initial' ([]): Initial [tau beta].
@@ -18,7 +18,7 @@ function [startvar] = EMzeropoisson_mat(data, varargin)
 % -'m' ([]): Relative library size M.
 % -'display' (true): Display the fitting procedure.
 % -'intercept' (true): Whether the model contains an intercept.
-%
+% 
 % Result contains the fitted results in each row. The last row shows
 % the final result. First column is tau, second column is intercept (if the
 % model has intercept), other columns are fitted coefficients.
@@ -45,7 +45,7 @@ if length(dbstack)>1
     p.KeepUnmatched = true;
 end
 parse(p,data,varargin{:});
-if p.Results.Madj 
+if p.Results.Madj
     validateattributes(p.Results.m,{'numeric'},{'size',[n,1]},'EMzeropoisson_mat','m');
 end
 
@@ -94,7 +94,7 @@ while (i < p.Results.maxiter && (i==1 || ...
     options = optimoptions('fminunc','Algorithm','trust-region','SpecifyObjectiveGradient',true,...
         'HessianFcn','objective','Display','off');
     if (i ~=1 && strcmp(p.Results.initialtau,'stable'))
-        tau = -mean(log( n./ sum(Z==0) - 1) ./ (Dx * startvar(i,2:end)'));
+        tau = -log( n./ sum(Z==0) - 1) ./ mean((Dx * startvar(i,2:end)'))
     elseif (strcmp(p.Results.initialtau,'initial'))
         tau = startvar(1, 1);
     elseif (strcmp(p.Results.initialtau,'iteration'))
@@ -110,7 +110,7 @@ while (i < p.Results.maxiter && (i==1 || ...
     end
     
     i = i+1;
-    if (strcmp('iteration',p.Results.initialtau) && abs(max(diff(startvar(:,1))))>50 && i>3)
+    if (strcmp('iteration',p.Results.initialtau) && max(abs(diff(startvar(:,1))))>50 && i>3)
         disp('May be divergent tau. Try ''stable'' model.')
         %%continue
     end

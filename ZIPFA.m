@@ -16,7 +16,7 @@ function [Ufit,Vfit,itr,finaltau,Likelihood,CVLikelihood] = ZIPFA(X, k, varargin
 % -'iter' (20): Max iterations.
 % -'tol' (1e-4): Percentage of l2 norm change of [tau beta] in ZIP regression.
 % -'maxiter' (100): Max iterations in ZIP regression.
-% -'initialtau' ('iteration'): Choose the initial value of tau at the beginning of EM iteration in ZIP regression.
+% -'initialtau' (iteration'): Choose the initial value of tau at the beginning of EM iteration in ZIP regression.
 %       'stable': estimate tau from fitted beta in last round;
 %       'initial': always use the initially assigned tau in 'tau' or 'initial';
 %           Use the default tau = 0.1 if 'initial' is empty.
@@ -62,7 +62,7 @@ end
 X=X(:,sum(X==0)/m<p.Results.cut);
 [m,n] = size(X);
 if n~=n0
-   warning('%d columns have been dropped due to the ''cut'' option.\n',n0-n)
+    warning('%d columns have been dropped due to the ''cut'' option.\n',n0-n)
 end
 
 
@@ -179,13 +179,14 @@ for itr=1:p.Results.iter
             fprintf('Max Ln likelihood diff = %.4g %% \n',full(100*(Likelihood(itr)-Likelihood(itr-1))/abs(Likelihood(itr-1))))
         end
         if (full((Likelihood(itr)-Likelihood(itr-1))/abs(Likelihood(itr-1))))<p.Results.tolLnlikelihood
-            finaltau=uuuu(end,1);
-            Ufit = Ufit(~cellfun('isempty',Ufit));
-            Vfit = Vfit(~cellfun('isempty',Vfit));
             break
         end
     end
 end
+
+finaltau=uuuu(end,1);
+Ufit = Ufit(~cellfun('isempty',Ufit));
+Vfit = Vfit(~cellfun('isempty',Vfit));
 
 if ~isempty(rept)
     save(['factor' num2str(k) 'fold' num2str(rept)])

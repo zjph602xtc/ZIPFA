@@ -105,24 +105,6 @@ pnew
 load('alldataX.mat')
 [~,CVlikelihood]=cv_ZIPFA(X,1:8,10,'display',false);
 
-%% Figrue 1
-load('alldataX.mat')
-% X=X(:,sum(X==0)/281<0.8);
-m = sum(X,2,'omitnan')/median(sum(X,2,'omitnan'));
-
-Xd = bsxfun(@(x,y)x./y, X, m);
-X1 = log(Xd);
-X1(isinf(X1)) = NaN;
-X1mean = mean(X1, 'omitnan');
-
-p = sum(X==0)/281;
-pz=p==0;
-plot(X1mean(~pz),p(~pz),'+')
-% plot(X1mean(~pz),log(p(~pz)./(1-p(~pz))),'+')
-axis([-1 7 -0.02 1.02])
-
-esttau = fitlm(X1mean(~pz),log(p(~pz)./(1-p(~pz))),'Intercept',false);
-
 %% Figure 4 (a)(b)
 load('alldataX.mat')
 tic
@@ -406,14 +388,118 @@ for i=1:200
     csvwrite(sprintf('g11_%d.csv',i),X);
 end
 
+% seting 6.1 20%  count all inflated zeros
+for i=1:200
+    rng(i)
+    u = [[0*ones(35,1); 2*ones(45,1); 1.7*ones(60,1);0*ones(60,1)]...
+        [1.8*ones(35,1);0.9*ones(45,1); 0*ones(120,1)]...
+        [0*ones(35,1);1.7*ones(165,1)]];
+    vt = [[0.0*ones(1,30) 0*ones(1,30) 1.7*ones(1,40)];...
+        [0*ones(1,35) 1.7*ones(1,25) 1*ones(1,40)];...
+        [1.7*ones(1,25) 0.9*ones(1,50) 0.9*ones(1,25)]];
+    u=normrnd(0,0.06,200,3)+u;
+    vt=normrnd(0,0.05,3,100)+vt;
+    a = u * vt;
+    lambda = exp(a);
+    max(max(lambda));
+    phi = unifrnd(0.5, 1, 1, 100);
+    phi = repmat(phi,200,1);
+    X = nbinrnd(1./phi,1./(1+lambda.*phi));
+
+    tau = 100;
+    P = exp(-tau./lambda);
+    Z = binornd(1,P,200,100);
+    X(logical(Z)) = 0;
+    sum(sum(X==0))/20000
+    csvwrite(sprintf('g12_%d.csv',i),X);
+end
+
+% seting 6.1 40%  count all inflated zeros
+for i=1:200
+    rng(i)
+    u = [[0*ones(35,1); 2*ones(45,1); 1.7*ones(60,1);0*ones(60,1)]...
+        [1.8*ones(35,1);0.9*ones(45,1); 0*ones(120,1)]...
+        [0*ones(35,1);1.7*ones(165,1)]];
+    vt = [[0.0*ones(1,30) 0*ones(1,30) 1.7*ones(1,40)];...
+        [0*ones(1,35) 1.7*ones(1,25) 1*ones(1,40)];...
+        [1.7*ones(1,25) 0.9*ones(1,50) 0.9*ones(1,25)]];
+    u=normrnd(0,0.06,200,3)+u;
+    vt=normrnd(0,0.05,3,100)+vt;
+    a = u * vt;
+    lambda = exp(a);
+    max(max(lambda));
+    phi = unifrnd(0.5, 1, 1, 100);
+    phi = repmat(phi,200,1);
+    X = nbinrnd(1./phi,1./(1+lambda.*phi));
+
+    tau = 17.5;
+    P = exp(-tau./lambda);
+    Z = binornd(1,P,200,100);
+    X(logical(Z)) = 0;
+    sum(sum(X==0))/20000
+    csvwrite(sprintf('g13_%d.csv',i),X);
+end
+
+% seting 6.2 20%  count all inflated zeros
+for i=1:200
+    rng(i)
+    u = [[0*ones(35,1); 2*ones(45,1); 1.7*ones(60,1);0*ones(60,1)]...
+        [1.8*ones(35,1);0.9*ones(45,1); 0*ones(120,1)]...
+        [0*ones(35,1);1.7*ones(165,1)]];
+    vt = [[0.0*ones(1,30) 0*ones(1,30) 1.7*ones(1,40)];...
+        [0*ones(1,35) 1.7*ones(1,25) 1*ones(1,40)];...
+        [1.7*ones(1,25) 0.9*ones(1,50) 0.9*ones(1,25)]];
+    u=normrnd(0,0.06,200,3)+u;
+    vt=normrnd(0,0.05,3,100)+vt;
+    a = u * vt;
+    lambda = exp(a);
+    max(max(lambda));
+    phi = unifrnd(1, 3, 1, 100);
+    phi = repmat(phi,200,1);
+    X = nbinrnd(1./phi,1./(1+lambda.*phi));
+
+%     tau = 100;
+%     P = exp(-tau./lambda);
+%     Z = binornd(1,P,200,100);
+%     X(logical(Z)) = 0;
+    sum(sum(X==0))/20000
+    csvwrite(sprintf('g14_%d.csv',i),X);
+end
+
+% seting 6.2 40%  count all inflated zeros
+for i=1:200
+    rng(i)
+    u = [[0*ones(35,1); 2*ones(45,1); 1.7*ones(60,1);0*ones(60,1)]...
+        [1.8*ones(35,1);0.9*ones(45,1); 0*ones(120,1)]...
+        [0*ones(35,1);1.7*ones(165,1)]];
+    vt = [[0.0*ones(1,30) 0*ones(1,30) 1.7*ones(1,40)];...
+        [0*ones(1,35) 1.7*ones(1,25) 1*ones(1,40)];...
+        [1.7*ones(1,25) 0.9*ones(1,50) 0.9*ones(1,25)]];
+    u=normrnd(0,0.06,200,3)+u;
+    vt=normrnd(0,0.05,3,100)+vt;
+    a = u * vt;
+    lambda = exp(a);
+    max(max(lambda));
+    phi = unifrnd(1, 3, 1, 100);
+    phi = repmat(phi,200,1);
+    X = nbinrnd(1./phi,1./(1+lambda.*phi));
+
+    tau = 41;
+    P = exp(-tau./lambda);
+    Z = binornd(1,P,200,100);
+    X(logical(Z)) = 0;
+    sum(sum(X==0))/20000
+    csvwrite(sprintf('g15_%d.csv',i),X);
+end
+
 %% Table 1: calculate values
 % ZIPFA
-for g=1:11
+for g=12:15
     for i=1:200
         X(:,:,i)=csvread(sprintf('g%d_%d.csv',g,i));
     end
     parfor i=1:200
-        [Ufit,Vfit,itr,esttau,Likelihood,MLikelihood]=ZIPFA(X(:,:,i), 3, 'Madj',false);
+        [Ufit,Vfit,itr,esttau,Likelihood,MLikelihood]=ZIPFA(X(:,:,i), 3, 'Madj',false,'display',false);
         fita(:,:,i)=Ufit{itr}*Vfit{itr}';
     end
     for i=1:200
@@ -422,7 +508,7 @@ for g=1:11
 end
 
 % log-PCA
-for g=10:11
+for g=12:15
     for i=1:200
         X(:,:,i)=csvread(sprintf('g%d_%d.csv',g,i));
     end
@@ -447,7 +533,7 @@ vt = [[0.0*ones(1,30) 0*ones(1,30) 1.7*ones(1,40)];...
     [0*ones(1,35) 1.7*ones(1,25) 1*ones(1,40)];...
     [1.7*ones(1,25) 0.9*ones(1,50) 0.9*ones(1,25)]];
 a = u * vt;
-for g=1:11
+for g=12:15
     for i=1:200
         X(:,:,i)=csvread(sprintf('g%d_%d_fit_log.csv',g,i));
 %       X(:,:,i)=csvread(sprintf('g%d_%d_fit.csv',g,i));
@@ -478,8 +564,9 @@ vt = [[0.0*ones(1,30) 0*ones(1,30) 1.7*ones(1,40)];...
     [0*ones(1,35) 1.7*ones(1,25) 1*ones(1,40)];...
     [1.7*ones(1,25) 0.9*ones(1,50) 0.9*ones(1,25)]];
 a = u * vt;
-for g=11:11
-    for i=1:200
+for g=15
+    for i=1:198
+        try
         X(:,:,i)=csvread(sprintf('g%d_%d_fit_gomms.csv',g,i));
         l2(g,i)=sum(mean(abs(X(:,:,i)-a)).^2);
         [taxa(g,i),sub(g,i)]=cluster_fit(X(:,:,i));
@@ -487,10 +574,11 @@ for g=11:11
         dif=sum((X(:,:,i)-a).^2);
         simp(g,i)=sum((dif./lsum).^2);
         bray(g,i)=sum(mean(abs(X(:,:,i)-a)))/2;
+        end
     end
 end
-dd=(l2==l2(10,1));
-dd(5,28)=1;
+dd=(l2==l2(15,3));
+
 l2(dd)=nan;bray(dd)=nan;taxa(dd)=nan;sub(dd)=nan;simp(dd)=nan;
 mean(l2,2,'omitnan')
 std(l2,0,2,'omitnan')
@@ -511,8 +599,8 @@ vt = [[0.0*ones(1,30) 0*ones(1,30) 1.7*ones(1,40)];...
     [0*ones(1,35) 1.7*ones(1,25) 1*ones(1,40)];...
     [1.7*ones(1,25) 0.9*ones(1,50) 0.9*ones(1,25)]];
 a = u * vt;
-for g=1:11
-    for i=1:200
+for g=12:15
+    for i=1:30
         X(:,:,i)=csvread(sprintf('g%d_%d_fit_psvdos.csv',g,i));
         l2(g,i)=sum(mean(abs(X(:,:,i)-a)).^2);
         [taxa(g,i),sub(g,i)]=cluster_fit(X(:,:,i));
@@ -535,23 +623,38 @@ std(sub,0,2,'omitnan')
 mean(1000*simp,2,'omitnan')
 std(1000*simp,0,2,'omitnan')
 
-%% Figure 5
+%% Figure 5 (a)
+% ZIPFA
+% bar
 load('finaluv.mat')
 taxa = readtable('taxa.csv','ReadVariableNames',0);
 taxa = taxa(sum(X==0)/281<0.8,:);
 taxa = taxa{:,:};
+sng = xlsread('our_result.xlsx','taxa+genus analysis','D1:D297');
+use = xlsread('our_result.xlsx','taxa+genus analysis','C1:C297');
 % use results in 'our_result.xlsx'
 % fac: loading on factor 2
 % sng: whether is clinical meaningful
-h=bar(fac);
-color = [[30 129 196]/255;
-    [237 77 36]/255;
-    [0,175,79]/255];
+v = v(use==0, :);
+fac = abs(v(:,2));
+sng = sng(use==0);
+taxa = taxa(use==0);
+
+[~,f2o] = sort(fac,'desc');
+taxafo = taxa(f2o);
+fac = fac(f2o);
+sng = sng(f2o);
+
+% h=bar(abs(fac));
+color = [[30 129 196]/255; % b
+    [237 77 36]/255; %r
+    [0,175,79]/255]; %g
 
 fHand = figure;
 aHand = axes('parent', fHand);
 hold(aHand, 'on')
 h = [];
+set(gcf,'OuterPosition',[157   667   797   404])
 for i = 1:numel(fac)
     if sng(i)==-1
         c = 3;
@@ -560,29 +663,99 @@ for i = 1:numel(fac)
     else
         c = 2;
     end
-    h = [h bar(i, fac(i), 'parent', aHand, 'facecolor', color(c,:))];
+    h = [h bar(i, abs(fac(i)), 'parent', aHand, 'facecolor', color(c,:))];
+end
+for i = 1:numel(fac)
+    if sng(i)==-1
+        hatchfill2(h(i),'single','HatchColor','white','HatchLineWidth',2,'HatchDensity',45);
+    elseif sng(i)==0
+        c = 1;
+    else
+        hatchfill2(h(i),'single','HatchColor','white','HatchLineWidth',2,'HatchDensity',20);
+    end
 end
 
 set(h,'edgecolor','none')
 xlim([0 231])
-
 xlabel('Taxa species')
 ylabel('Absolute loadings on factor 2')
+box on
+[hhh,out2,ppp,ttt]=legendflex(h([1 3 2]),{'Clinically meaningful taxa with negative loadings' 'Clinically meaningful taxa with positive loadings' 'Other taxa'});
 
-legend(aHand,h([1 3 2]),{'Clinical meaningful taxa with negative loadings' 'Clinical meaningful taxa with positive loadings' 'Other taxa'})
-set(gcf,'PaperSize',[11.5000 11])
+set(gcf,'OuterPosition',[157   667   797   404])
+hatchfill2(out2(4),'single','HatchColor','white','HatchLineWidth',2,'HatchDensity',15);
+hatchfill2(out2(5),'single','HatchColor','white','HatchLineWidth',2,'HatchDensity',8);
+pnew
 
 % permutation test
 median(find(sng))
 iter = 50000;
-sam = [ones(25,iter); zeros(204,iter)];
+sam = [ones(sum(abs(sng)),iter); zeros(211,iter)];
 f = [];
 for i = 1:iter
     sam(:,i)=randsample(sam(:,1),229);
     f = [f find(sam(:,i))];
 end
-hist(mean(f))
-sum(mean(f)<mean(find(sng)))
+hist(median(f))
+normcdf(median(find(sng)),mean(median(f)),std(median(f)))
+
+%% Figure 5 (b)
+% log-SVD
+v = readtable('lsvd_v.csv','ReadVariableNames',0);
+v = v{:,:};
+sng = xlsread('our_result.xlsx','taxa+genus analysis','D1:D297');
+use = xlsread('our_result.xlsx','taxa+genus analysis','C1:C297');
+% use results in 'our_result.xlsx'
+% fac: loading on factor 2
+% sng: whether is clinical meaningful
+v = v(use==0, :);
+fac = abs(v(:,2));
+sng = sng(use==0);
+
+[~,f2o] = sort(fac,'desc');
+fac = fac(f2o);
+sng = sng(f2o);
+
+% h=bar(abs(fac));
+color = [[30 129 196]/255; % b
+    [237 77 36]/255; %r
+    [0,175,79]/255]; %g
+
+fHand = figure;
+aHand = axes('parent', fHand);
+hold(aHand, 'on')
+h = [];
+set(gcf,'OuterPosition',[157   667   797   404])
+for i = 1:numel(fac)
+    if sng(i)==-1
+        c = 3;
+    elseif sng(i)==0
+        c = 1;
+    else
+        c = 2;
+    end
+    h = [h bar(i, abs(fac(i)), 'parent', aHand, 'facecolor', color(c,:))];
+end
+for i = 1:numel(fac)
+    if sng(i)==-1
+        hatchfill2(h(i),'single','HatchColor','white','HatchLineWidth',2,'HatchDensity',45);
+    elseif sng(i)==0
+        c = 1;
+    else
+        hatchfill2(h(i),'single','HatchColor','white','HatchLineWidth',2,'HatchDensity',20);
+    end
+end
+
+set(h,'edgecolor','none')
+xlim([0 231])
+xlabel('Taxa species')
+ylabel('Absolute loadings on factor 2')
+box on
+[hhh,out2,ppp,ttt]=legendflex(h([140 37 36]),{'Clinically meaningful taxa with negative loadings' 'Clinically meaningful taxa with positive loadings' 'Other taxa'});
+set(gcf,'OuterPosition',[157   667   797   404])
+hatchfill2(out2(4),'single','HatchColor','white','HatchLineWidth',2,'HatchDensity',15);
+hatchfill2(out2(5),'single','HatchColor','white','HatchLineWidth',2,'HatchDensity',8);
+pnew
 
 %% Figure 3
 % generate simulation data
@@ -729,10 +902,10 @@ hold on
 h2=errorbar(x2,e2);
 set(h1,'linew',1.5)
 set(h2,'linew',1.5)
-set(h1(1),'color',color(1,:))
-set(h1(2),'color',color(2,:))
-set(h1(3),'color',color(3,:))
-set(h2,'color',color(4,:))
+set(h1(1),'color',color(1,:),'lines','-.')
+set(h1(2),'color',color(2,:),'lines','-')
+set(h1(3),'color',color(3,:),'lines','--')
+set(h2,'color',color(4,:),'lines',':')
 ylim([0,410])
 xlim([0 16])
 ax=gca;
@@ -743,8 +916,9 @@ xlabel('Inflated zero percentage')
 ylabel('L_2 norm')
 
 %% Figure 2
+% left
 res = [];
-for g=1:11
+for g=1:15
     for i = 1:100
         [cvsample,allres] = cv_ZIPFA(csvread(sprintf('g%d_%d.csv',g,i)), 1:5, 'Madj', false);
         res = [res; allres];
@@ -776,6 +950,29 @@ legend([h1(1:2) h2(1) h1(3) h2(2) h1(4) h2(3) h1(5) h2(4) h1(6) h2(5)],...
     'location','southeast')
 g=gca;
 g.XTick=[2:5];
+xlabel('Rank')
+ylabel('CV likelihood')
+pnew
+
+% figure 2 right
+color = [[30 129 196]/255; % b
+    [237 77 36]/255;];  %r
+h1=errorbar(m(:,[1,3]),s(:,[1,3]))
+set(h1,'linew',1)
+for i=1:2
+    set(h1(i),'color',color(3-i,:))
+end
+hold on
+h2=errorbar(m(:,[2,4]),s(:,[2,4]),'--')
+set(h2,'linew',1)
+for i=1:2
+    set(h2(i),'color',color(3-i,:))
+end
+axis([0.8,5.2,-110000,-9000])
+legend([h1(1) h2(1) h1(2) h2(2)],...
+    {'Setting 6.1 (20%)','Setting 6.1 (40%)','Setting 6.2 (20%)','Setting 6.2 (40%)'},'location','southwest')
+g=gca;
+g.XTick=[1:5];
 xlabel('Rank')
 ylabel('CV likelihood')
 pnew
@@ -824,3 +1021,89 @@ pnew
 
 %% Web Table 1
 % in 'Simu.R'
+
+%% Web Figure 5
+% biplot
+load('finaluv.mat')
+sng = xlsread('our_result.xlsx','taxa+genus analysis','D1:D297');
+use = xlsread('our_result.xlsx','taxa+genus analysis','C1:C297');
+v = v(use==0, :);
+sng = sng(use==0);
+h=scatter(abs(v(sng==0,2)),abs(v(sng==0,1))/1.4,10,color(1,:),'filled');
+hold on
+h1=scatter(abs(v(sng==1,2)),abs(v(sng==1,1)),35,color(2,:),'filled');
+h2=scatter(abs(v(sng==-1,2)),abs(v(sng==-1,1)),35,color(3,:),'filled');
+xlabel('factor 2')
+ylabel('factor 3')
+box on
+legend([h2 h1 h],{'Clinically meaningful taxa with negative loadings' 'Clinically meaningful taxa with positive loadings' 'Other taxa'})
+pnew
+
+% biplot logsvd
+v = readtable('lsvd_v.csv','ReadVariableNames',0);
+v = v{:,:};
+sng = xlsread('our_result.xlsx','taxa+genus analysis','D1:D297');
+use = xlsread('our_result.xlsx','taxa+genus analysis','C1:C297');
+v = v(use==0, :);
+sng = sng(use==0);
+h=scatter(abs(v(sng==0,2)),abs(v(sng==0,4)),10,color(1,:),'filled');
+hold on
+h1=scatter(abs(v(sng==1,2)),abs(v(sng==1,4)),35,color(2,:),'filled');
+h2=scatter(abs(v(sng==-1,2)),abs(v(sng==-1,4)),35,color(3,:),'filled');
+xlabel('factor 2')
+ylabel('factor 4')
+box on
+legend([h2 h1 h],{'Clinically meaningful taxa with negative loadings' 'Clinically meaningful taxa with positive loadings' 'Other taxa'})
+ylim([0,0.17])
+pnew
+
+% biplot psvdos
+v = readtable('psvdos_v.csv','ReadVariableNames',0);
+v = v{:,:};
+sng = xlsread('our_result.xlsx','taxa+genus analysis','D1:D297');
+use = xlsread('our_result.xlsx','taxa+genus analysis','C1:C297');
+v = v(use==0, :);
+sng = sng(use==0);
+h=scatter(abs(v(sng==0,1)),abs(v(sng==0,4)),10,color(1,:),'filled');
+hold on
+h1=scatter(abs(v(sng==1,1)),abs(v(sng==1,4)),35,color(2,:),'filled');
+h2=scatter(abs(v(sng==-1,1)),abs(v(sng==-1,4)),35,color(3,:),'filled');
+xlabel('factor 1')
+ylabel('factor 4')
+box on
+legend([h2 h1 h],{'Clinically meaningful taxa with negative loadings' 'Clinically meaningful taxa with positive loadings' 'Other taxa'})
+ylim([0,0.17])
+pnew
+
+% biplot gomms
+v = readtable('gomms_v.csv','ReadVariableNames',0);
+v = v{:,:};
+sng = xlsread('our_result.xlsx','taxa+genus analysis','D1:D297');
+use = xlsread('our_result.xlsx','taxa+genus analysis','C1:C297');
+v = v(use==0, :);
+sng = sng(use==0);
+h=scatter(abs(v(sng==0,2)),abs(v(sng==0,1)),10,color(1,:),'filled');
+hold on
+h1=scatter(abs(v(sng==1,2)),abs(v(sng==1,1)),35,color(2,:),'filled');
+h2=scatter(abs(v(sng==-1,2)),abs(v(sng==-1,1)),35,color(3,:),'filled');
+xlabel('factor 2')
+ylabel('factor 1')
+box on
+legend([h2 h1 h],{'Clinically meaningful taxa with negative loadings' 'Clinically meaningful taxa with positive loadings' 'Other taxa'})
+pnew
+
+%% Web Figure 4
+% pcoa
+load('alldataX.mat')
+X = X(:,sum(X==0)/281<0.8);
+di = f_dis(X,'bc');
+v = f_pcoa(di,1);
+csvwrite('pcoa_u.csv',v.scores);
+
+% nmds
+load('alldataX.mat')
+X = X(:,sum(X==0)/281<0.8);
+di = f_dis(X,'bc');
+rng(1818)
+v = f_nmds(di,5,0,1);
+csvwrite('nmds_u.csv',v.scores);

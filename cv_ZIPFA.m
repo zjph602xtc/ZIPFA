@@ -17,7 +17,7 @@ function [cvsample,Allres] = cv_ZIPFA (X, k, varargin)
 % -'iter' (20): Max iterations.
 % -'tol' (1e-4): Percentage of l2 norm change of [tau beta] in ZIP regression.
 % -'maxiter' (100): Max iterations in ZIP regression.
-% -'initialtau' ('iteration'): Choose the initial value of tau at the beginning of EM iteration in ZIP regression.
+% -'initialtau' (iteration'): Choose the initial value of tau at the beginning of EM iteration in ZIP regression.
 %       'stable': estimate tau from fitted beta in last round;
 %       'initial': always use the initially assigned tau in 'tau' or 'initial';
 %           Use the default tau = 0.1 if 'initial' is empty.

@@ -1,6 +1,6 @@
 %% Zero inflated Poisson regression
 % generate data
-n = 50000;
+n = 5000;
 x1 = randn(n,1);
 x2 = randn(n,1);
 lam = exp(x1 - 2*x2 + 1.5);
@@ -19,7 +19,7 @@ fittedtau = res(end,1);
 fittedintercept = res(end,2);
 fittedbeta = res(end,3:end);
 
-EMzeropoisson_mat([y x1 x2],0.5,'initialtau','stable','tol',0.01)
+EMzeropoisson_mat([y x1 x2],0.5,'initialtau','stable','tol',0.001)
 
 %% Zero inflated Poisson factor analysis
 % generate data
@@ -50,12 +50,12 @@ fittedV = Vfit{itr};
 
 % calculate the likelihood of first 2 rows in the predicted model
 [~, ~, ~, ~, likelihood, CVlikelihood]= ZIPFA(X,3,'Madj',false,...
-    'missing',[false(2,102);true(198,102)]);
+    'missing',[false(2,100);true(198,100)]);
 
 %% Cross validation - Zero inflated Poisson factor analysis
 % use the simulated data in last section
 % use parallel toolbox accelerate
-[cvsample,CVlikelihood]=cv_ZIPFA(X,1:6,10,'Madj',false);
+[cvsample,CVlikelihood]=cv_ZIPFA(X,1:6,10,'Madj',false,'parallel',true,'display',false);
 errorbar(1:6,mean(CVlikelihood),std(CVlikelihood))
 % single thread
 % [cvsample,CVlikelihood]=cv_ZIPFA(X,2:4,10,'Madj',false,'parallel',false);

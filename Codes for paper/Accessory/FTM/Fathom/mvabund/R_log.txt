@@ -1,0 +1,54 @@
+
+R version 3.2.4 (2016-03-10) -- "Very Secure Dishes"
+Copyright (C) 2016 The R Foundation for Statistical Computing
+Platform: x86_64-apple-darwin13.4.0 (64-bit)
+
+R is free software and comes with ABSOLUTELY NO WARRANTY.
+You are welcome to redistribute it under certain conditions.
+Type 'license()' or 'licence()' for distribution details.
+
+  Natural language support but running in an English locale
+
+R is a collaborative project with many contributors.
+Type 'contributors()' for more information and
+'citation()' on how to cite R or R packages in publications.
+
+Type 'demo()' for some demos, 'help()' for on-line help, or
+'help.start()' for an HTML browser interface to help.
+Type 'q()' to quit R.
+
+> # R command sript to run mvabund
+> # by David L. Jones, May-2016
+> 
+> # Set working directory:
+> setwd("/Users/djones/Dropbox/djones/work/mWork/Fathom/mvabund/")
+> 
+> # Load mvabund package:
+> library(mvabund)
+> 
+> # Load data:
+> rawData <-read.table("mvabund_IN.csv",header=TRUE,row.names=1,sep=",")
+> 
+> # Parse data:
+> Y   <- mvabund(rawData[,2:length(rawData)])  # create mvabund object
+> grp <- factor(rawData[,1])                   # create categorical variable
+> 
+> # Fit model:
+> fit = manyglm(Y~grp,family="negative.binomial")
+> 
+> # Assess significance:
+> result = anova(fit, nBoot=1000, resamp="perm.resid", test="LR")
+Time elapsed: 0 hr 0 min 10 sec
+> 
+> # Parse table:
+> out    = data.frame(matrix(0, nrow=2,ncol=1)) # preallocate
+> out[1,1] = result$table[2,3] # Sum-of-Likelihood-Ratios Statistic
+> out[2,1] = result$table[2,4] # corresponding p-value
+> 
+> # Export results:
+> write.table(out,file="mvabund_OUT.dat",sep=" ",quote=FALSE,row.names = FALSE,
++             col.names = FALSE)
+> 
+> proc.time()
+   user  system elapsed 
+ 11.178   0.093  11.377 
